@@ -1,6 +1,21 @@
 // 元素
 var container = document.getElementById('game');
 
+//画布
+var canvas = document.getElementById('canvas');
+var context = canvas.getContext('2d');
+
+// 判断是否支持 requestAnimationFrame 方法，不支持用 setTimeout 模拟实现 
+window.requestAnimFrame =
+  window.requestAnimationFrame ||
+  window.webkitRequestAnimationFrame ||
+  window.mozRequestAnimationFrame ||
+  window.oRequestAnimationFrame ||
+  window.msRequestAnimationFrame ||
+  function (callback) {
+    window.setTimeout(callback, 1000 / 30);
+  };
+
 /**
  * 整个游戏对象
  */
@@ -37,6 +52,15 @@ var GAME = {
   },
   play: function() {
     this.setStatus('playing');
+    clear();
+    var plane = new Plane({
+      left: 350,
+      top: 560,
+      width: 60,
+      height: 100
+    });
+    plane.listenEvents();
+    plane.draw(context);
   }
 };
 

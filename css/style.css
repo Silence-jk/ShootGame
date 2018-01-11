@@ -1,11 +1,11 @@
 * { 
-  padding:0; 
+  padding: 0; 
   margin: 0;
 }
 
 html,body{
   height: 100%;
-  width:100%;
+  width: 100%;
 }
 
 canvas {
@@ -24,7 +24,7 @@ h1{
 
 a{
 	color: #fff;
-	text-decoration:none;
+	text-decoration: none;
 }
 a:hover{
 	text-decoration: underline;
