@@ -22,8 +22,38 @@
     getImage: function(imageName) {
       return this.resources.images[imageName];
     },
+    /**
+     * 
+     */
+    load: function(resources, callback) {
+      var images = resources.images;
+      var total = images.length;
+      var finish = 0;
+      //保存加载后的图片
+      this.resources = {
+        images: {}
+      };
+      var self = this;
+
+      //遍历加载图片
+      for(var i = 0; i< images.length; i++) {
+        var name = images[i].name;
+        var sec= images[i].src;
+        self.resources.images[name] = self.imageLoader(src, function() {
+          //加载完成
+          finish++;
+          if(finish === total) {
+            //图片全部加载完
+            callback(self.resources);
+          }
+        })
+      }
+    },
+    /**
+     * 继承最佳实践
+     */
     inheritPrototype: function(child, parent) {
-      var proto = parent.prototype;
+      var proto = Object.create(parent.prototype);
       proto.constructor = child;
       child.prototype = proto;
     }

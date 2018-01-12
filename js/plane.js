@@ -3,36 +3,54 @@
  * @param {*} opts 飞机的坐标，宽高参数 
  */
 function Plane(opts) {
+  var opts = opts || {};
   Element.call(this, opts);
+  this.minX = opts.minX;
+  this.maxX = opts.maxX;
+  this.bulletSpeed = opts.bulletSpeed || CONFIG.bulletSpeed;
+  this.bulletSize = opts.bulletSize || CONFIG.bulletSize;
+  this.bullets = [];
+  this.load();;
 }
 
 resourceHelper.inheritPrototype(Plane, Element);
+
+Plane.prototype.load = function() {
+  if(Plane.icon) {return this};
+  var image = new Image();;
+  image.src = CONFIG.planeIcon;
+  image.onload = function() {
+    Plane.icon = image;
+  }
+  return this;
+}
 /**
  * draw 根据飞机实例绘制出飞机
  * @param {*} context canvas 画布的 context 属性 
  */
 Plane.prototype.draw = function(context) {
-  var image = new Image();
-  image.src = './img/plane.png';
-  image.onload = function() {
-    context.drawImage(image, this.x, this.y, this.width, this.height);
+  if(!Plane.icon) {
+    context.fillRect(this.x, this.y, this.size.width, this.size.height);
+  } else {
+    context.drawImage(Plane.icon, this.x, this.y, this.size.width, this.size.height);
   }
-  // context.fillRect(this.x, this.y, this.width, this.height);
+  return this;
 }
 /**
  * Plane 的移动函数
  * @param {*} direction 移动方向 
- * @param {*} num 移动步数
  */
-Plane.prototype.move = function(direction, num) {
-  var nums = num || 10;
+Plane.prototype.translate = function(direction) {
+  var distance;
   switch (direction) {
     case 'left':
-      this.x -= nums;
+      distance = this.x < this.minX ? 0 : -this.speed;
       break;
     case 'right':
-      this.x += nums;
+      distance = this.x > this.maxX ? 0 : this.speed;
   }
+  this.move(distance, 0);
+  return this;
 }
 
 /**
@@ -43,19 +61,20 @@ Plane.prototype.listenEvents = function() {
   document.onkeydown = function(e) {
     //获取被按下的键值，兼容写法
     var key = e.keyCode || e.which || e.charCode;
+    console.log(key);
     switch (key) {
       //按下空格或上键发射子弹
       case 38:
-      case 8:
+      case 32:
         //发射子弹  
         break;
       //按下左键  
       case 37:
-        self.move('left');
+        self.translate('left');
         break;
       //按下右键
       case 39:
-        self.move('right');
+        self.translate('right');
         break;  
       default:
         console.log('direction is not match');
@@ -63,3 +82,12 @@ Plane.prototype.listenEvents = function() {
     }
   }
 }
+
+var plane = new Plane({
+  x: 320,
+  y: 470,
+  size: CONFIG.planeSize,
+  speed: 5,
+  minX: CONFIG.planeMinx,
+  maxX: CONFIG.planeMax
+});

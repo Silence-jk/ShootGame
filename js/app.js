@@ -5,6 +5,7 @@ var container = document.getElementById('game');
 var canvas = document.getElementById('canvas');
 var context = canvas.getContext('2d');
 
+
 // 判断是否支持 requestAnimationFrame 方法，不支持用 setTimeout 模拟实现 
 window.requestAnimFrame =
   window.requestAnimationFrame ||
@@ -16,6 +17,20 @@ window.requestAnimFrame =
     window.setTimeout(callback, 1000 / 30);
   };
 
+function clear() {
+  context.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+function draw() {
+  plane.draw(context);
+}
+
+function refresh(obj) {
+  console.log(obj);
+  clear();
+  draw();
+  requestAnimFrame(refresh);
+}
 /**
  * 整个游戏对象
  */
@@ -37,6 +52,11 @@ var GAME = {
       self.play();
     };
   },
+  update: function() {
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    plane.draw(context);
+    
+  },
   /**
    * 更新游戏状态，分别有以下几种状态：
    * start  游戏前
@@ -52,15 +72,9 @@ var GAME = {
   },
   play: function() {
     this.setStatus('playing');
-    clear();
-    var plane = new Plane({
-      left: 350,
-      top: 560,
-      width: 60,
-      height: 100
-    });
-    plane.listenEvents();
     plane.draw(context);
+    plane.listenEvents();
+    refresh(plane);
   }
 };
 

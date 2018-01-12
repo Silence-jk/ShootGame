@@ -6,8 +6,7 @@ function Element(opts) {
   var opts = opts || {};
   this.x = opts.x;
   this.y = opts.y;
-  this.width = opts.width;
-  this.height = opts.height;
+  this.size = opts.size;
   this.speed = opts.speed;
 }
 
@@ -17,7 +16,12 @@ function Element(opts) {
  */
 Element.prototype = {
   move: function(x, y) {
-    this.x = x;
-    this.y = y;
+    var a = x || 0;
+    var b = y || 0; 
+    this.x += a;
+    this.y += b;
+  },
+  draw: function() {
+    
   }
 }
