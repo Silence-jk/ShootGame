@@ -10,7 +10,7 @@ Bullet.prototype.fly = function() {
   return this;
 }
 Bullet.prototype.draw = function(context) {
-  context.beigin();
+  context.beginPath();
   context.strokeStyle = '#fff';
   context.moveTo(this.x, this.y);
   context.lineTo(this.x, this.y - this.size);

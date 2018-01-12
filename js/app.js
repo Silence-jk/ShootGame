@@ -25,8 +25,7 @@ function draw() {
   plane.draw(context);
 }
 
-function refresh(obj) {
-  console.log(obj);
+function refresh() {
   clear();
   draw();
   requestAnimFrame(refresh);
@@ -73,7 +72,7 @@ var GAME = {
   play: function() {
     this.setStatus('playing');
     plane.draw(context);
-    plane.listenEvents();
+    plane.listenEvents(context);
     refresh(plane);
   }
 };

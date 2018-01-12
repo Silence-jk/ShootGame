@@ -29,6 +29,7 @@ Plane.prototype.load = function() {
  * @param {*} context canvas 画布的 context 属性 
  */
 Plane.prototype.draw = function(context) {
+  this.drawBullets(context);
   if(!Plane.icon) {
     context.fillRect(this.x, this.y, this.size.width, this.size.height);
   } else {
@@ -36,6 +37,37 @@ Plane.prototype.draw = function(context) {
   }
   return this;
 }
+
+/**
+ * 发射子弹
+ */
+Plane.prototype.shoot = function() {
+  var x = this.x + this.size.width / 2;
+  this.bullets.push(new Bullet({
+    x: x,
+    y: this.y,
+    size: this.bulletSize,
+    speed: this.bulletSpeed
+  }));
+  return this;
+}
+
+/**
+ * 绘制子弹
+ */
+Plane.prototype.drawBullets = function(context) {
+  var bullets = this.bullets;
+  var len = bullets.length;
+  while(len--) {
+    var bullet = bullets[len];
+    bullet.fly();
+    if(bullet.y <= 0) {
+      bullets.splice(len, 1);
+    }
+    bullet.draw(context);
+  }
+}
+
 /**
  * Plane 的移动函数
  * @param {*} direction 移动方向 
@@ -67,6 +99,7 @@ Plane.prototype.listenEvents = function() {
       case 38:
       case 32:
         //发射子弹  
+        self.shoot();
         break;
       //按下左键  
       case 37:
@@ -82,6 +115,8 @@ Plane.prototype.listenEvents = function() {
     }
   }
 }
+
+
 
 var plane = new Plane({
   x: 320,
