@@ -36,6 +36,7 @@ var playBtn = document.querySelector('.js-play');
 var replayStart = document.querySelector('.game-failed .js-replay');
 var nextGame = document.querySelector('.game-success .js-next');
 var successReplay = document.querySelector('.game-all-success .js-replay');
+var nextLevel = document.querySelector('.game-next-level');
 //画布
 var canvas = document.getElementById('canvas');
 var context = canvas.getContext('2d');
@@ -167,7 +168,10 @@ var GAME = {
         this.end('all-success');
         return;
       }
+      var level = self.level;
+      nextLevel.innerText = '下一个Level: ' + (level + 1);
       this.end('success');
+    
       return;
     }
 
