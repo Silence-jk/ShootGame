@@ -32,7 +32,10 @@ function getEnemyBoundary(enemies) {
 // 元素
 var container = document.getElementById('game');
 var totalScore = document.querySelector('.game-failed .score');
+var playBtn = document.querySelector('.js-play');
 var replayStart = document.querySelector('.game-failed .js-replay');
+var nextGame = document.querySelector('.game-success .js-next');
+var successReplay = document.querySelector('.game-all-success .js-replay');
 //画布
 var canvas = document.getElementById('canvas');
 var context = canvas.getContext('2d');
@@ -70,19 +73,29 @@ var GAME = {
 
     //score area
     this.score = 0;
-
+    this.level = opts.level;
+    this.totalLevel = opts.totalLevel;
   
     this.status = 'start';
     this.bindEvent();
   },
   bindEvent: function() {
     var self = this;
-    var playBtn = document.querySelector('.js-play');
+    
     // 开始游戏按钮绑定
     playBtn.onclick = function() {
       self.play();
     };
     replayStart.onclick = function() {
+      self.play();
+    };
+    nextGame.onclick = function() {
+      self.level += 1;
+      self.play();
+    };
+    successReplay.onclick = function() {
+      self.level = 1;
+      self.score = 0;
       self.play();
     }
   },
@@ -117,19 +130,23 @@ var GAME = {
     this.plane.listenEvents();
 
     this.enemies = [];
-    var enemyTotal = this.opts.numPerLine;
+    var enemyPerLine = this.opts.numPerLine;
     var enemySpeed = this.opts.enemySpeed;
     var enemySize = this.opts.enemySize;
     var enemyGap = this.opts.enemyGap;
     var padding = this.opts.canvasPadding;
-    for(var i = 0; i < enemyTotal; i++) {
-      var enemy = new Enemy({
-        x: padding + (enemySize + enemyGap)*i,
-        y: padding,
-        size: enemySize,
-        speed: enemySpeed
-      });
-      this.enemies.push(enemy);
+    
+    for(var level = 0; level < this.level; level++){
+      console.log(this.level);
+      for(var i = 0; i < enemyPerLine; i++) {
+        var enemy = new Enemy({
+          x: padding + (enemySize + enemyGap) * i,
+          y: padding + (enemySize + enemyGap) * level,
+          size: enemySize,
+          speed: enemySpeed
+        });
+        this.enemies.push(enemy);
+      }
     }
     
     this.update();
@@ -143,8 +160,11 @@ var GAME = {
     this.draw();
 
     if (enemies.length === 0) {
-      this.end('failed');
-      totalScore.innerText = this.score;
+      if(self.level === self.totalLevel) {
+        this.end('all-success');
+        return;
+      }
+      this.end('success');
       return;
     }
 
