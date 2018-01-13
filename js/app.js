@@ -31,6 +31,8 @@ function getEnemyBoundary(enemies) {
 }
 // 元素
 var container = document.getElementById('game');
+var totalScore = document.querySelector('.game-failed .score');
+var replayStart = document.querySelector('.game-failed .js-replay');
 //画布
 var canvas = document.getElementById('canvas');
 var context = canvas.getContext('2d');
@@ -69,6 +71,7 @@ var GAME = {
     //score area
     this.score = 0;
 
+  
     this.status = 'start';
     this.bindEvent();
   },
@@ -79,6 +82,9 @@ var GAME = {
     playBtn.onclick = function() {
       self.play();
     };
+    replayStart.onclick = function() {
+      self.play();
+    }
   },
   /**
    * 更新游戏状态，分别有以下几种状态：
@@ -93,8 +99,13 @@ var GAME = {
     this.status = status;
     container.setAttribute("data-status", status);
   },
+  end: function(status) {
+    context.clearRect(0, 0, canvasWidth, canvasHeight);
+    this.setStatus(status);
+  },
   play: function() {
     this.setStatus('playing');
+    this.drawScore();
     this.plane = new Plane({
       x: this.planePosX,
       y: this.planePosY,
@@ -120,15 +131,28 @@ var GAME = {
       });
       this.enemies.push(enemy);
     }
-
     
     this.update();
   },
   update: function() {
     var self = this;
+    var enemies = this.enemies;
     context.clearRect(0, 0, canvasWidth, canvasHeight);
+    this.drawScore();
     this.updateEnemies();
     this.draw();
+
+    if (enemies.length === 0) {
+      this.end('failed');
+      totalScore.innerText = this.score;
+      return;
+    }
+
+    if(enemies[enemies.length - 1].y >= this.enemyLimitY) {
+      this.end('failed');
+      totalScore.innerText = this.score;
+      return;
+    }
     requestAnimFrame(function() {
       self.update();
     });
@@ -158,7 +182,7 @@ var GAME = {
           break;
         case 'booming':
           this.enemies.splice(len, 1);  
-          this,score++;
+          this.score++;
           break;
       }
     }
@@ -168,6 +192,11 @@ var GAME = {
     this.enemies.forEach((enemy) => {
       enemy.draw(context);
     })
+  },
+  drawScore: function() {
+    context.fillStyle = '#fff';
+    context.font = '18px 黑体';
+    context.fillText('分数: ' + this.score, 20, 20);
   }
 };
 
