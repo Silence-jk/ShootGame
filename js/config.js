@@ -22,6 +22,4 @@ var CONFIG = {
     height: 100
   }, // 默认飞机的尺寸,
   planeIcon: './img/plane.png',
-  planeMinx: 30,
-  planeMaxx: 670
 };

@@ -66,3 +66,7 @@ Enemy.prototype.draw = function(context) {
   }
   return this;
 }
+Enemy.prototype.booming = function() {
+  this.status = 'booming';
+}
+

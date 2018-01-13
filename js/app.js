@@ -9,18 +9,25 @@ window.requestAnimFrame =
     window.setTimeout(callback, 1000 / 30);
   };
 
-function clear() {
-  context.clearRect(0, 0, canvas.width, canvas.height);
-}
-
-function draw() {
-  plane.draw(context);
-}
-
-function refresh() {
-  clear();
-  draw();
-  requestAnimFrame(refresh);
+function getEnemyBoundary(enemies) {
+  var minX, maxX;
+  enemies.forEach(enemy => {
+    if(!minX && !maxX) {
+      minX = enemy.x;
+      maxX = enemy.x;
+    } else {
+      if(enemy.x < minX) {
+        minX = enemy.x;
+      } 
+      if(enemy.x > maxX) {
+        maxX = enemy.x;
+      }
+    }
+  });
+  return {
+    minX,
+    maxX
+  }
 }
 // 元素
 var container = document.getElementById('game');
@@ -50,6 +57,7 @@ var GAME = {
     this.enemyLimitY = canvasHeight - this.padding - this.planeHeight;
     this.enemyMinX = this.padding;
     this.enemyMaxX = canvasWidth - this.padding - opts.enemySize;
+    this.enemyDirection = this.opts.enemyDirection;
 
     //plane active area   
     this.planeMinX = this.padding;
@@ -87,6 +95,16 @@ var GAME = {
   },
   play: function() {
     this.setStatus('playing');
+    this.plane = new Plane({
+      x: this.planePosX,
+      y: this.planePosY,
+      size: this.opts.planeSize,
+      speed: this.opts.planeSpeed,
+      minX: this.planeMinx,
+      maxX: this.planeMaxX
+    });
+    this.plane.listenEvents();
+
     this.enemies = [];
     var enemyTotal = this.opts.numPerLine;
     var enemySpeed = this.opts.enemySpeed;
@@ -108,28 +126,48 @@ var GAME = {
   },
   update: function() {
     var self = this;
-    var enemies = this.enemies;
     context.clearRect(0, 0, canvasWidth, canvasHeight);
-    plane.draw(context);
-    plane.listenEvents();
-    var len = this.enemies.length;
-    var lastEnemyX = enemies[len-1].x;
-    var firstEnemyX = enemies[0].x;
-    var direction;
-    if(lastEnemyX >= this.enemyMaxX || firstEnemyX <= this.enemyMinX) {
-      direction = direction === "right" ? "left" : "right";
-    }
-    console.log(lastEnemyX + ' ' + firstEnemyX);
-    console.log('-----------------')
-    console.log(this.enemyMaxX + ' ' + this.enemyMinX);
-    while (len--) {
-      this.enemies[len].draw(context);
-      this.enemies[len].translate(direction);
-    }
-
+    this.updateEnemies();
+    this.draw();
     requestAnimFrame(function() {
       self.update();
     });
+  },
+  updateEnemies: function() {
+    var enemies = this.enemies;
+    var len = enemies.length;
+    var temp = getEnemyBoundary(enemies);
+    var down = false;
+
+    if (temp.minX < this.enemyMinX || temp.maxX > this.enemyMaxX) {
+      this.enemyDirection = this.enemyDirection === "right" ? "left" : "right";
+      down = true;
+    }
+
+    while (len--) {
+      var enemy = this.enemies[len];
+      enemy.translate(this.enemyDirection);
+      if(down) {
+        enemy.down();
+      }
+      switch (enemy.status) {
+        case 'normal':
+          if(this.plane.hasHit(enemy)) {
+            enemy.booming();
+          }
+          break;
+        case 'booming':
+          this.enemies.splice(len, 1);  
+          this,score++;
+          break;
+      }
+    }
+  },
+  draw: function() {
+    this.plane.draw(context);
+    this.enemies.forEach((enemy) => {
+      enemy.draw(context);
+    })
   }
 };
 

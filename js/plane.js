@@ -115,13 +115,20 @@ Plane.prototype.listenEvents = function() {
   }
 }
 
-
-
-var plane = new Plane({
-  x: 320,
-  y: 470,
-  size: CONFIG.planeSize,
-  speed: 5,
-  minX: CONFIG.planeMinx,
-  maxX: CONFIG.planeMax
-});
+/**
+ * 判断子弹是否射中敌人
+ * @param {*} enemy 
+ */
+Plane.prototype.hasHit = function(enemy) {
+  var bullets = this.bullets;
+  for(var i = bullets.length -1; i >= 0; i--) {
+    var bullet = bullets[i];
+    var x = bullet.x >= enemy.x && bullet.x <= (enemy.x + enemy.size);
+    var y = bullet.y >= enemy.y && bullet.y <= (enemy.y + enemy.size);
+    if(x && y) {
+      this.bullets.splice(i, 1);
+      return true;
+    }
+  }
+  return false;
+}
