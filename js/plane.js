@@ -93,7 +93,6 @@ Plane.prototype.listenEvents = function() {
   document.onkeydown = function(e) {
     //获取被按下的键值，兼容写法
     var key = e.keyCode || e.which || e.charCode;
-    console.log(key);
     switch (key) {
       //按下空格或上键发射子弹
       case 38:
