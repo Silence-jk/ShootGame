@@ -88,30 +88,18 @@ Plane.prototype.translate = function(direction) {
 /**
  * 监听键盘事件
  */
-Plane.prototype.listenEvents = function() {
+Plane.prototype.listenEvents = function(keyBoard) {
   var self = this;
-  document.onkeydown = function(e) {
-    //获取被按下的键值，兼容写法
-    var key = e.keyCode || e.which || e.charCode;
-    switch (key) {
-      //按下空格或上键发射子弹
-      case 38:
-      case 32:
-        //发射子弹  
-        self.shoot();
-        break;
-      //按下左键  
-      case 37:
-        self.translate('left');
-        break;
-      //按下右键
-      case 39:
-        self.translate('right');
-        break;  
-      default:
-        console.log('direction is not match');
-        break;
-    }
+  if (keyBoard.pressedLeft || keyBoard.heldLeft) {
+    self.translate("left")
+  }
+  if (keyBoard.pressedRight || keyBoard.heldRight) {
+    self.translate("right")
+  }
+  if (keyBoard.pressedUp || keyBoard.pressedSpace) {
+    keyBoard.pressedUp = false;
+    keyBoard.pressedSpace = false;
+    self.shoot()
   }
 }
 

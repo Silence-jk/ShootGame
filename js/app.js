@@ -76,6 +76,7 @@ var GAME = {
     this.level = opts.level;
     this.totalLevel = opts.totalLevel;
   
+    this.keyBoard = new KeyBoard();
     this.status = 'start';
     this.bindEvent();
   },
@@ -87,6 +88,7 @@ var GAME = {
       self.play();
     };
     replayStart.onclick = function() {
+      self.score = 0;
       self.play();
     };
     nextGame.onclick = function() {
@@ -127,7 +129,7 @@ var GAME = {
       minX: this.planeMinx,
       maxX: this.planeMaxX
     });
-    this.plane.listenEvents();
+    
 
     this.enemies = [];
     var enemyPerLine = this.opts.numPerLine;
@@ -156,6 +158,7 @@ var GAME = {
     var enemies = this.enemies;
     context.clearRect(0, 0, canvasWidth, canvasHeight);
     this.drawScore();
+    this.plane.listenEvents(this.keyBoard);
     this.updateEnemies();
     this.draw();
 
