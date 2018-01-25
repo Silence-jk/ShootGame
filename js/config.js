@@ -6,7 +6,7 @@ var CONFIG = {
   status: 'start', // 游戏开始默认为开始中
   level: 1, // 游戏默认等级
   totalLevel: 6, // 总共6关
-  numPerLine: 6, // 游戏默认每行多少个怪兽
+  numPerLine: 7, // 游戏默认每行多少个怪兽
   canvasPadding: 30, // 默认画布的间隔
   bulletSize: 10, // 默认子弹长度
   bulletSpeed: 10, // 默认子弹的移动速度

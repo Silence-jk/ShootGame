@@ -90,6 +90,7 @@ var GAME = {
     };
     replayStart.onclick = function() {
       self.score = 0;
+      self.level = 1;
       self.play();
     };
     nextGame.onclick = function() {
@@ -127,7 +128,7 @@ var GAME = {
       y: this.planePosY,
       size: this.opts.planeSize,
       speed: this.opts.planeSpeed,
-      minX: this.planeMinx,
+      minX: this.planeMinX,
       maxX: this.planeMaxX
     });
     
@@ -140,7 +141,7 @@ var GAME = {
     var padding = this.opts.canvasPadding;
     
     for(var level = 0; level < this.level; level++){
-      console.log(this.level);
+      // console.log(this.level);
       for(var i = 0; i < enemyPerLine; i++) {
         var enemy = new Enemy({
           x: padding + (enemySize + enemyGap) * i,
