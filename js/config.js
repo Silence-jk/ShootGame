@@ -13,13 +13,26 @@ var CONFIG = {
   enemySpeed: 2, // 默认敌人移动距离
   enemySize: 50, // 默认敌人的尺寸
   enemyGap: 10,  // 默认敌人之间的间距
-  enemyIcon: './img/enemy.png', // 怪兽的图像
-  enemyBoomIcon: './img/boom.png', // 怪兽死亡的图像
   enemyDirection: 'right', // 默认敌人一开始往右移动
   planeSpeed: 5, // 默认飞机每一步移动的距离
   planeSize: {
     width: 60,
     height: 100
   }, // 默认飞机的尺寸,
-  planeIcon: './img/plane.png',
+  resources: {
+    images: [
+      {
+        src: './img/enemy.png',
+        name: 'enemyImage'
+      },
+      {
+        src: './img/boom.png',
+        name: 'boomImage'
+      },
+      {
+        src: './img/plane.png',
+        name: 'planeImage'
+      }
+    ]
+  }
 };

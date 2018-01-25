@@ -129,7 +129,8 @@ var GAME = {
       size: this.opts.planeSize,
       speed: this.opts.planeSpeed,
       minX: this.planeMinX,
-      maxX: this.planeMaxX
+      maxX: this.planeMaxX,
+      icon: resourceHelper.getImage('planeImage')
     });
     
 
@@ -147,7 +148,9 @@ var GAME = {
           x: padding + (enemySize + enemyGap) * i,
           y: padding + (enemySize + enemyGap) * level,
           size: enemySize,
-          speed: enemySpeed
+          speed: enemySpeed,
+          icon: resourceHelper.getImage('enemyImage'),
+          boomIcon: resourceHelper.getImage('boomImage')
         });
         this.enemies.push(enemy);
       }
@@ -228,6 +231,16 @@ var GAME = {
   }
 };
 
+/**
+ * 页面主入口
+ */
+function init() {
+  //加载图片资源，加载完成才能交互
+  resourceHelper.load(CONFIG.resources, function(resources) {
+    //加载完成
+    GAME.init();
+  });
+}
 
 // 初始化
-GAME.init();
+init();

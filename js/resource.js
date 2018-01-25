@@ -38,7 +38,7 @@
       //遍历加载图片
       for(var i = 0; i< images.length; i++) {
         var name = images[i].name;
-        var sec= images[i].src;
+        var src = images[i].src;
         self.resources.images[name] = self.imageLoader(src, function() {
           //加载完成
           finish++;

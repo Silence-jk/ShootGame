@@ -10,30 +10,23 @@ function Plane(opts) {
   this.bulletSpeed = opts.bulletSpeed || CONFIG.bulletSpeed;
   this.bulletSize = opts.bulletSize || CONFIG.bulletSize;
   this.bullets = [];
-  this.load();;
+  // this.load();;
+  this.icon = opts.icon;
 }
 
 resourceHelper.inheritPrototype(Plane, Element);
 
-Plane.prototype.load = function() {
-  if(Plane.icon) {return this};
-  var image = new Image();;
-  image.src = CONFIG.planeIcon;
-  image.onload = function() {
-    Plane.icon = image;
-  }
-  return this;
-}
 /**
  * draw 根据飞机实例绘制出飞机
  * @param {*} context canvas 画布的 context 属性 
  */
 Plane.prototype.draw = function(context) {
+  var self = this;
   this.drawBullets(context);
-  if(!Plane.icon) {
+  if(!self.icon) {
     context.fillRect(this.x, this.y, this.size.width, this.size.height);
   } else {
-    context.drawImage(Plane.icon, this.x, this.y, this.size.width, this.size.height);
+    context.drawImage(self.icon, this.x, this.y, this.size.width, this.size.height);
   }
   return this;
 }
@@ -61,7 +54,7 @@ Plane.prototype.drawBullets = function(context) {
   while(len--) {
     var bullet = bullets[len];
     bullet.fly();
-    if(bullet.y <= 0) {
+    if(bullet.y <= 0 - bullet.size) {
       bullets.splice(len, 1);
     }
     bullet.draw(context);
